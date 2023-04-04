@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{testing}
+\author{juanan }
+\date{February 2023}
+
+\usepackage{xcolor,soul,lipsum}
+\usepackage[hidelinks]{hyperref}
+
+
+
+%\newcounter{context}[chatex]
+%\newcommand{\context}[1][]{\refstepcounter{context}\par\medskip
+%   \noindent \textbf{Example~\theexample. #1} \rmfamily}{\medskip}
+
+%\newcounter{mytotalchatex}
+%\newcounter{mycontext}[mytotalchatex]
+%\newcommand{\context}[1]{
+%    \gdef\storeContext{#1}% Store the argument in a variable
+%    \listadd\contextlist{\storeContext}% Add the variable to a list
+%    \textbf{#1}
+%    \stepcounter{mycontext}
+%    \themycontext
+%}
+
+
+%\newcommand{\chatex}[2][red]{
+%    \stepcounter{mytotalchatex}
+%    \setulcolor{#1}
+%    \href{https://chat.openai.com/chat?q=#2}{\ul{#2}}
+%    \ifnum\listlen\contextlist>0 % Check if the list is non-empty
+%        \renewcommand{\do}[1]{%
+%          \textcolor{red}{##1}% Print each value in red
+%        }
+%       \dolistloop\contextlist%
+ %    \fi
+%}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+
+\newcommand{\context}[1]{\textbf{#1}\listgadd\contextlist{#1}% Add the variable to a list
+}
+
+\newcommand{\concatlist}[2]{%
+  \def#1{}% Initialize the variable
+  \renewcommand{\do}[1]{\gappto#1{context(##1)}}% Define the loop operation
+  \dolistloop{#2}% Perform the loop
+}
+
+\newcommand{\chatex}[2][red]{
+ \setulcolor{#1}
+ \ifboolexpr{test {\ifdefempty{\contextlist}}}{%
+   \href{https://chat.openai.com/chat?q=#2}{\ul{#2}}
+ }{
+    %\forlistloop{\textcolor{red}}\contextlist% Print each value in red%
+    \concatlist{\myvar}{\contextlist}
+    \href{https://chat.openai.com/chat?q=#2\&c=\myvar}{\ul{#2}}
+    \renewcommand{\contextlist}{}% Clear the context list
+    \ignorespaces
+  }
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. \context{reuse} Aliquam erat volutpat. Donec eu nisl pellentesque, tristique nulla ut, vulputate nisl. \context{Small companies} sit amet risus a enim ullamcorper pretium ac at arcu. Morbi vulputate ut justo egestas mattis. Phasellus auctor, nunc quis tristique tempus, enim diam condimentum turpis, a fringilla \context{lot of features} in elit. Ut lacinia purus in feugiat luctus\chatex{benefits of SPL.}
+
+Duis metus quam, bibendum at odio ac, aliquet feugiat sem. Nulla malesuada enim urna. In hac habitasse platea dictumst. Nulla \context{varius} enim quis odio volutpat tincidunt. Praesent viverra faucibus felis id dapibus. Donec ut sem mauris. Mauris tellus tortor, faucibus nec iaculis a, porttitor quis tortor. Suspendisse potenti. Nulla facilisi. \chatex{Phasellus venenatis,} lectus quis ultricies eleifend, tellus sem pretium risus, at vulputate libero mauris vel purus.
+
+\chatex{Phasellus malesuada lectus sem, id bibendum sem blandit non.} Vivamus aliquet nisi in felis vehicula, ac rutrum lorem venenatis. Etiam metus arcu, commodo sed suscipit id, hendrerit quis nunc. Phasellus posuere eget elit eget consectetur. Vestibulum quis eros lobortis, vestibulum augue ac, imperdiet elit. Maecenas ornare tellus et diam blandit suscipit. Duis maximus faucibus commodo. Vivamus auctor diam id ipsum suscipit, quis rutrum est lobortis. Praesent sit amet efficitur lacus, sit amet venenatis sapien. Vivamus sollicitudin arcu eros, non imperdiet dui fermentum vel. Curabitur vestibulum urna quis dui fermentum, ac facilisis mi congue. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc maximus ultricies metus, tempus aliquet purus rhoncus et. Suspendisse ultrices enim dolor, dignissim euismod magna suscipit quis. Morbi pellentesque ex massa, quis feugiat elit egestas ac. Sed facilisis lorem id dapibus vestibulum. Nam velit tellus, interdum vitae velit eget, porta luctus orci.
+
+Ut et lorem ut sapien eleifend accumsan. Fusce ut auctor arcu, nec fermentum quam. Vivamus commodo accumsan sagittis. Morbi eget ipsum ullamcorper, blandit elit sed, malesuada augue. Morbi vitae leo luctus quam vulputate fermentum in ut mi. Vestibulum et est scelerisque, iaculis felis vitae, ullamcorper eros. Proin hendrerit facilisis arcu.
+
+Donec congue in purus ut fringilla. Vestibulum hendrerit felis diam, et fermentum ex tristique nec. Donec eu ligula hendrerit, convallis dui in, efficitur dolor. Nulla feugiat lectus in dapibus ullamcorper. Morbi a cursus massa. Ut et eros sapien. Quisque viverra tortor non imperdiet malesuada. Proin iaculis quam nec mauris mollis, et viverra dui dapibus. Suspendisse potenti. Cras sagittis mollis lectus, vitae tristique arcu posuere vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris eget augue fermentum, gravida velit ut, molestie velit. Duis felis tortor, dapibus sit amet commodo ac, pretium ut dui. Donec vitae euismod elit, non interdum magna. Nulla risus orci, faucibus ut mi tristique, pretium sollicitudin nibh. Phasellus sit amet lacus a ligula gravida mollis.
+hello
+\context{Xabi}
+\context{Another context}
+Ut lacinia purus in feugiat luctus. Integer sagittis luctus sapien id auctor.
+\chatex{How is PhD student?}
+
+
+\forcsvlist{\listadd\mylist}{item1, item2, item3}
+\end{document}
