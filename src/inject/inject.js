@@ -2,56 +2,48 @@
 chrome.extension.sendMessage({}, function(response) {
     // Log a message to the console
     console.log("Chatex working...");
-
+    const url = new URL(window.location.href);
+    console.log(url);
+    const query = url.searchParams.get("q");
+    console.log(query);
+    const context = url.searchParams.get("c");
+    console.log(context);
     // Set up an interval that will check if the document is ready every 1 second
     var readyStateCheckInterval = setInterval(function() {
         // Check if the document is fully loaded and ready to be manipulated
         if (document.readyState === "complete") {
             // Stop the interval since the document is ready
-            clearInterval(readyStateCheckInterval);
-
-            // Set up a timeout of 1 second (1000 milliseconds) before executing the code inside the arrow function
+            console.log('context');
+            // Create a new keyboard event to simulate the enter key press
+            const enterKeyEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                code: 'Enter',
+                keyCode: 13,
+                which: 13,
+                bubbles: true,
+                cancelable: true,
+            });
             setTimeout(() => {
-                // Create a new URL object based on the current window's URL
-                const url = new URL(window.location.href);
-
-                // Get the value of the "q" parameter in the URL's search parameters
-                const query = url.searchParams.get("q");
-                const context = url.searchParams.get("c");
-
-                // Create a new keyboard event to simulate the enter key press
-                const enterKeyEvent = new KeyboardEvent('keydown', {
-                    key: 'Enter',
-                    code: 'Enter',
-                    keyCode: 13,
-                    which: 13,
-                    bubbles: true,
-                    cancelable: true,
-                });
-
-                // Log the value of "query" to the console
-                console.log(query)
-
-                // Set the value of the first <textarea> element on the page to the value of "query"
                 let textArea = document.getElementsByTagName('textarea')[0]
+                let question = query
                 if (context) {
-                    const regex = /context\((.*?)\)/g;
+                    const regex = /context\(\-(.*?)\-\)/g;
                     const matches = [];
                     let match;
                     while ((match = regex.exec(context))) {
                         matches.push(match[1]);
                     }
-                    textArea.value = query + " in the context of " + matches.join(" and ");
+                    question = query + " in the context of " + matches.join(" and ")
+                    textArea.value = question
                 } else {
-                    textArea.value = query;
+                    textArea.value = question;
                 }
-
-
-                // Trigger the "enter" key press event on the <textarea> element to initiate the search
                 setTimeout(() => {
-                    // textArea.dispatchEvent(enterKeyEvent);
-                }, 500);
-            }, 1000);
+                    textArea.dispatchEvent(enterKeyEvent);
+                }, 50);
+            }, 500);
+
+            clearInterval(readyStateCheckInterval);
         }
-    }, 1000);
+    }, 100);
 });

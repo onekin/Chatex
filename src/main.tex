@@ -7,48 +7,31 @@
 
 \usepackage{xcolor,soul,lipsum}
 \usepackage[hidelinks]{hyperref}
-
-
-
-%\newcounter{context}[chatex]
-%\newcommand{\context}[1][]{\refstepcounter{context}\par\medskip
-%   \noindent \textbf{Example~\theexample. #1} \rmfamily}{\medskip}
-
-%\newcounter{mytotalchatex}
-%\newcounter{mycontext}[mytotalchatex]
-%\newcommand{\context}[1]{
-%    \gdef\storeContext{#1}% Store the argument in a variable
-%    \listadd\contextlist{\storeContext}% Add the variable to a list
-%    \textbf{#1}
-%    \stepcounter{mycontext}
-%    \themycontext
-%}
-
-
-%\newcommand{\chatex}[2][red]{
-%    \stepcounter{mytotalchatex}
-%    \setulcolor{#1}
-%    \href{https://chat.openai.com/chat?q=#2}{\ul{#2}}
-%    \ifnum\listlen\contextlist>0 % Check if the list is non-empty
-%        \renewcommand{\do}[1]{%
-%          \textcolor{red}{##1}% Print each value in red
-%        }
-%       \dolistloop\contextlist%
- %    \fi
-%}
 \usepackage{xcolor}
 \usepackage{etoolbox}
 
-\newcommand{\context}[1]{\textbf{#1}\listgadd\contextlist{#1}% Add the variable to a list
+\newcommand{\context}[1]{#1\listgadd\contextlist{#1}% Add the variable to a list
 }
 
 \newcommand{\concatlist}[2]{%
   \def#1{}% Initialize the variable
-  \renewcommand{\do}[1]{\gappto#1{context(##1)}}% Define the loop operation
+   \renewcommand{\do}[1]{\gappto#1{context(-##1-)}}% Define the loop operation
   \dolistloop{#2}% Perform the loop
 }
 
+
+
 \newcommand{\chatex}[2][red]{
+ \setulcolor{#1}
+ \href{https://chat.openai.com/chat?q=#2}{\ul{#2}}
+}
+
+\newcommand{\shortChatex}[3][red]{
+ \setulcolor{#1}
+ \href{https://chat.openai.com/chat?q=#2}{\ul{#3}}
+}
+
+\newcommand{\chatexC}[2][red]{
  \setulcolor{#1}
  \ifboolexpr{test {\ifdefempty{\contextlist}}}{%
    \href{https://chat.openai.com/chat?q=#2}{\ul{#2}}
@@ -56,7 +39,20 @@
     %\forlistloop{\textcolor{red}}\contextlist% Print each value in red%
     \concatlist{\myvar}{\contextlist}
     \href{https://chat.openai.com/chat?q=#2\&c=\myvar}{\ul{#2}}
-    \renewcommand{\contextlist}{}% Clear the context list
+    %\renewcommand{\contextlist}{}% Clear the context list
+    \ignorespaces
+  }
+}
+
+\newcommand{\shortChatexC}[3][red]{
+ \setulcolor{#1}
+ \ifboolexpr{test {\ifdefempty{\contextlist}}}{%
+   \href{https://chat.openai.com/chat?q=#2}{\ul{#3}}
+ }{
+    %\forlistloop{\textcolor{red}}\contextlist% Print each value in red%
+    \concatlist{\myvar}{\contextlist}
+    \href{https://chat.openai.com/chat?q=#2\&c=\myvar}{\ul{#3}}
+    %\renewcommand{\contextlist}{}% Clear the context list
     \ignorespaces
   }
 }
